@@ -60,3 +60,9 @@ elf -> user: Thanks choom
 
 
 ```
+
+## Development
+### How to run
+First of all, you need to specify two parameters `bot.token` and `bot.username`. You can do it in the configuration file 
+(don't forget to remove them before commit), or via environment variables. 
+See the Spring boot [documentation](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config).
