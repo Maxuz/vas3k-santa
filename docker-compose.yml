@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  db:
+    image: postgres
+    restart: "no"
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - santa-net
+
+volumes:
+  pgdata:
+
+networks:
+  santa-net:

@@ -1,5 +1,6 @@
 package dev.maxuz.vas3ksanta;
 
+import dev.maxuz.vas3ksanta.bot.Bot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
