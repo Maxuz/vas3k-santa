@@ -21,7 +21,7 @@
             <column name="tid" type="varchar(50)">
                 <constraints unique="true"/>
             </column>
-            <column name="vas3k_uuid" type="uuid"/>
+            <column name="vas3k_uuid" type="varchar(50)"/>
             <column name="vas3k_slug" type="varchar(50)"/>
             <column name="admin" type="boolean"/>
             <column name="country_id" type="integer">
