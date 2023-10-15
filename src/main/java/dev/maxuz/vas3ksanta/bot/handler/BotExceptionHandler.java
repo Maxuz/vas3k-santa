@@ -4,8 +4,8 @@ import dev.maxuz.vas3ksanta.bot.BotUtils;
 import dev.maxuz.vas3ksanta.bot.BotMessageService;
 import dev.maxuz.vas3ksanta.db.GrandchildRepository;
 import dev.maxuz.vas3ksanta.db.RegStageRepository;
-import dev.maxuz.vas3ksanta.model.Grandchild;
-import dev.maxuz.vas3ksanta.model.RegStage;
+import dev.maxuz.vas3ksanta.model.GrandchildEntity;
+import dev.maxuz.vas3ksanta.model.RegStageEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,10 +38,10 @@ public class BotExceptionHandler {
         String fromId = botUtils.getFromId(update);
         if (fromId != null) {
             messageService.sendInternalErrorMessage(fromId);
-            Optional<Grandchild> opGrandchild = grandchildRepository.findByTelegramId(fromId);
+            Optional<GrandchildEntity> opGrandchild = grandchildRepository.findByTelegramId(fromId);
             if (opGrandchild.isPresent()) {
-                RegStage regStage = regStageRepository.findByGrandchild(opGrandchild.get())
-                    .orElse(new RegStage(RegStage.Stage.ERROR, opGrandchild.get()));
+                RegStageEntity regStage = regStageRepository.findByGrandchild(opGrandchild.get())
+                    .orElse(new RegStageEntity(RegStageEntity.Stage.ERROR, opGrandchild.get()));
                 regStageRepository.save(regStage);
             }
         }

@@ -4,8 +4,8 @@ import dev.maxuz.vas3ksanta.bot.BotMessageService;
 import dev.maxuz.vas3ksanta.bot.BotUtils;
 import dev.maxuz.vas3ksanta.db.GrandchildRepository;
 import dev.maxuz.vas3ksanta.db.RegStageRepository;
-import dev.maxuz.vas3ksanta.model.Grandchild;
-import dev.maxuz.vas3ksanta.model.RegStage;
+import dev.maxuz.vas3ksanta.model.GrandchildEntity;
+import dev.maxuz.vas3ksanta.model.RegStageEntity;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -55,7 +55,7 @@ class BotExceptionHandlerTest {
     void handle_GrandchildExists_UpdateRegStageAndSendMessage() {
         var update = mock(Update.class);
         var exception = mock(Exception.class);
-        var grandchild = mock(Grandchild.class);
+        var grandchild = mock(GrandchildEntity.class);
 
         when(botUtils.getFromId(any(Update.class))).thenReturn("1234");
         when(grandchildRepository.findByTelegramId(any())).thenReturn(Optional.of(grandchild));
@@ -63,11 +63,11 @@ class BotExceptionHandlerTest {
         handler.handle(update, exception);
 
         verify(messageService).sendInternalErrorMessage("1234");
-        ArgumentCaptor<RegStage> regStageArgCap = ArgumentCaptor.forClass(RegStage.class);
+        ArgumentCaptor<RegStageEntity> regStageArgCap = ArgumentCaptor.forClass(RegStageEntity.class);
         verify(regStageRepository).save(regStageArgCap.capture());
 
-        RegStage regStage = regStageArgCap.getValue();
+        RegStageEntity regStage = regStageArgCap.getValue();
         assertNotNull(regStage);
-        assertEquals(RegStage.Stage.ERROR, regStage.getStage());
+        assertEquals(RegStageEntity.Stage.ERROR, regStage.getStage());
     }
 }

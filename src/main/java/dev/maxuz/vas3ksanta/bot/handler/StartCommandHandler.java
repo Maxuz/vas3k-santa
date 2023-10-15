@@ -5,8 +5,8 @@ import dev.maxuz.vas3ksanta.bot.BotProps;
 import dev.maxuz.vas3ksanta.bot.BotUtils;
 import dev.maxuz.vas3ksanta.db.GrandchildRepository;
 import dev.maxuz.vas3ksanta.db.RegStageRepository;
-import dev.maxuz.vas3ksanta.model.Grandchild;
-import dev.maxuz.vas3ksanta.model.RegStage;
+import dev.maxuz.vas3ksanta.model.GrandchildEntity;
+import dev.maxuz.vas3ksanta.model.RegStageEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -47,13 +47,13 @@ public class StartCommandHandler implements BotUpdateHandler {
     public void handle(Update update) {
         var telegramId = botUtils.getFromId(update.getMessage());
 
-        Optional<Grandchild> opGrandchild = grandchildRepository.findByTelegramId(telegramId);
-        Grandchild grandchild = opGrandchild.orElse(new Grandchild(telegramId));
+        Optional<GrandchildEntity> opGrandchild = grandchildRepository.findByTelegramId(telegramId);
+        GrandchildEntity grandchild = opGrandchild.orElse(new GrandchildEntity(telegramId));
         grandchildRepository.save(grandchild);
 
 
-        RegStage regStage = regStageRepository.findByGrandchild(grandchild).orElse(new RegStage(RegStage.Stage.STARTED, grandchild));
-        if (regStage.getStage() == RegStage.Stage.FINAL) {
+        RegStageEntity regStage = regStageRepository.findByGrandchild(grandchild).orElse(new RegStageEntity(RegStageEntity.Stage.STARTED, grandchild));
+        if (regStage.getStage() == RegStageEntity.Stage.FINAL) {
             messageService.sendPlainText(telegramId, "⚠️ Warning ⚠️ Мы нашли существующую регистрацию. Продолжение операции удалит текущую запись. Навеки вечные.");
         } else {
             regStageRepository.save(regStage);

@@ -24,7 +24,7 @@ public class AuthCallbackController {
     @GetMapping("auth")
     public String auth(@RequestParam("tid") String telegramId, OAuth2AuthenticationToken authentication) {
         MDC.put("tid", telegramId);
-        log.info("Success auth for telegram user: {}", telegramId);
+        log.info("Success auth for telegram user: {}", telegramId); // todo telegramId may be null if we have web UI
         try {
             String accessToken = securityService.getAccessToken(authentication);
             botService.onSuccessAuth(accessToken, telegramId);

@@ -3,8 +3,10 @@ package dev.maxuz.vas3ksanta.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity(name = "grandchild")
-public final class Grandchild {
+public final class GrandchildEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "grandchild_id_seq")
     private Long id;
@@ -12,28 +14,33 @@ public final class Grandchild {
     @Column(name = "tid", unique = true)
     private String telegramId;
 
-    @Column(name = "vid", unique = true)
+    @Column(name = "vas3k_uuid", unique = true)
     private String vas3kId;
 
-    @Column(name = "vslug")
-    private String vslug;
+    @Column(name = "vas3k_slug")
+    private String vas3kSlug;
 
     @Column(name = "admin")
     private boolean admin = false;
 
-    @Column(name = "country")
-    private String country;
-
-    @Column(name = "city")
-    private String city;
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private CountryEntity country;
 
     @Column(name = "delivery_address")
     private String deliveryAddress;
 
-    public Grandchild() {
+    @ManyToMany
+    @JoinTable(name = "grandchild_recipient_country",
+        joinColumns = @JoinColumn(name = "grandchild_id"),
+        inverseJoinColumns = @JoinColumn(name = "country_id")
+    )
+    private List<CountryEntity> recipientCountries;
+
+    public GrandchildEntity() {
     }
 
-    public Grandchild(String telegramId) {
+    public GrandchildEntity(String telegramId) {
         this.telegramId = telegramId;
     }
 
@@ -61,12 +68,12 @@ public final class Grandchild {
         this.vas3kId = vas3kId;
     }
 
-    public String getVslug() {
-        return vslug;
+    public String getVas3kSlug() {
+        return vas3kSlug;
     }
 
-    public void setVslug(String vslug) {
-        this.vslug = vslug;
+    public void setVas3kSlug(String vas3kSlug) {
+        this.vas3kSlug = vas3kSlug;
     }
 
     public boolean isAdmin() {
@@ -77,20 +84,12 @@ public final class Grandchild {
         this.admin = admin;
     }
 
-    public String getCountry() {
+    public CountryEntity getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(CountryEntity country) {
         this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public String getDeliveryAddress() {
@@ -99,5 +98,13 @@ public final class Grandchild {
 
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
+    }
+
+    public List<CountryEntity> getRecipientCountries() {
+        return recipientCountries;
+    }
+
+    public void setRecipientCountries(List<CountryEntity> recipientCountries) {
+        this.recipientCountries = recipientCountries;
     }
 }

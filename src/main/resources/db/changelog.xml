@@ -5,6 +5,15 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
     <changeSet id="1" author="maxuz">
+        <createTable tableName="country">
+            <column name="id" type="serial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
         <createTable tableName="grandchild">
             <column name="id" type="serial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -12,7 +21,30 @@
             <column name="tid" type="varchar(50)">
                 <constraints unique="true"/>
             </column>
+            <column name="vas3k_uuid" type="uuid"/>
+            <column name="vas3k_slug" type="varchar(50)"/>
+            <column name="admin" type="boolean"/>
+            <column name="country_id" type="integer">
+                <constraints nullable="true"
+                             foreignKeyName="fk_grandchild_country"
+                             references="country(id)"/>
+            </column>
+            <column name="delivery_address" type="varchar(300)"/>
         </createTable>
+
+        <createTable tableName="grandchild_recipient_country">
+            <column name="grandchild_id" type="integer">
+                <constraints nullable="false"
+                             foreignKeyName="fk_grandchild_recipient_country_grandchild"
+                             references="grandchild(id)"/>
+            </column>
+            <column name="country_id" type="integer">
+                <constraints nullable="false"
+                             foreignKeyName="fk_grandchild_recipient_country_country"
+                             references="country(id)"/>
+            </column>
+        </createTable>
+
         <createTable tableName="reg_stage">
             <column name="id" type="serial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -24,5 +56,6 @@
                              references="grandchild(id)"/>
             </column>
         </createTable>
+
     </changeSet>
 </databaseChangeLog>

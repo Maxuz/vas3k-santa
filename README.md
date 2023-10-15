@@ -76,5 +76,5 @@ List of required properties:
 - `spring.datasource.url` (`SPRING_DATASOURCE_URL`) - URL for the database, e.g.: `jdbc:postgresql://172.19.0.2:5432/santa?createDatabaseIfNotExist=true`
 
 
-You can specify them in the configuration file (don't forget to remove them before commit), 
+You can specify them in the additional configuration file and locate them via application parameter `spring.config.additional-location` 
 or via environment variables. See the Spring boot [documentation](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config).

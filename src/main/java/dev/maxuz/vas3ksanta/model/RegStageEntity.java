@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity(name = "reg_stage")
-public class RegStage {
+public class RegStageEntity {
     public enum Stage {
         STARTED,
         AUTH,
@@ -34,12 +34,12 @@ public class RegStage {
 
     @OneToOne(optional = false)
     @JoinColumn(name = "grandchild_id")
-    private Grandchild grandchild;
+    private GrandchildEntity grandchild;
 
-    public RegStage() {
+    public RegStageEntity() {
     }
 
-    public RegStage(Stage stage, Grandchild grandchild) {
+    public RegStageEntity(Stage stage, GrandchildEntity grandchild) {
         this.stage = stage.toString();
         this.grandchild = grandchild;
     }
@@ -60,11 +60,11 @@ public class RegStage {
         this.stage = stage.toString();
     }
 
-    public Grandchild getGrandchild() {
+    public GrandchildEntity getGrandchild() {
         return grandchild;
     }
 
-    public void setGrandchild(Grandchild grandchild) {
+    public void setGrandchild(GrandchildEntity grandchild) {
         this.grandchild = grandchild;
     }
 }
