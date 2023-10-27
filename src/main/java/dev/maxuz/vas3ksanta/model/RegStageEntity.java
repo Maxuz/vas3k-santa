@@ -3,6 +3,7 @@ package dev.maxuz.vas3ksanta.model;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
 
+@SuppressWarnings("unused")
 @Entity(name = "reg_stage")
 public class RegStageEntity {
     public enum Stage {
@@ -10,6 +11,7 @@ public class RegStageEntity {
         AUTH,
 
         FINAL,
+        DECLINED,
         ERROR;
 
         public static Stage fromString(String s) {

@@ -2,6 +2,7 @@ package dev.maxuz.vas3ksanta.bot;
 
 import dev.maxuz.vas3ksanta.bot.handler.BotExceptionHandler;
 import dev.maxuz.vas3ksanta.bot.handler.BotUpdateHandler;
+import dev.maxuz.vas3ksanta.exception.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -58,6 +59,8 @@ public class Bot extends TelegramLongPollingBot {
                 messageService.sendPlainText(telegramId, "Неизвестный запрос. Проверьте правильность сообщения и если все хорошо обратитесь к администратору");
             }
 
+        } catch (UserException e) {
+            botExceptionHandler.handle(update, e);
         } catch (Exception e) {
             botExceptionHandler.handle(update, e);
         } finally {

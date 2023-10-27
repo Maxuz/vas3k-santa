@@ -1,17 +1,14 @@
 package dev.maxuz.vas3ksanta.bot.handler;
 
-import dev.maxuz.vas3ksanta.bot.BotUtils;
 import dev.maxuz.vas3ksanta.bot.BotMessageService;
-import dev.maxuz.vas3ksanta.db.GrandchildRepository;
-import dev.maxuz.vas3ksanta.db.RegStageRepository;
-import dev.maxuz.vas3ksanta.model.GrandchildEntity;
+import dev.maxuz.vas3ksanta.bot.BotUtils;
+import dev.maxuz.vas3ksanta.exception.UserException;
 import dev.maxuz.vas3ksanta.model.RegStageEntity;
+import dev.maxuz.vas3ksanta.service.RegStageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.Optional;
 
 @Service
 public class BotExceptionHandler {
@@ -19,17 +16,23 @@ public class BotExceptionHandler {
 
     private final BotUtils botUtils;
     private final BotMessageService messageService;
-    private final GrandchildRepository grandchildRepository;
-    private final RegStageRepository regStageRepository;
+    private final RegStageService regStageService;
 
     public BotExceptionHandler(BotUtils botUtils,
                                BotMessageService messageService,
-                               GrandchildRepository grandchildRepository,
-                               RegStageRepository regStageRepository) {
+                               RegStageService regStageService) {
         this.botUtils = botUtils;
         this.messageService = messageService;
-        this.grandchildRepository = grandchildRepository;
-        this.regStageRepository = regStageRepository;
+        this.regStageService = regStageService;
+    }
+
+    public void handle(Update update, UserException e) {
+        log.info("User exception", e);
+        String fromId = botUtils.getFromId(update);
+        if (fromId != null) {
+            messageService.sendPlainText(fromId, e.getUserMessage());
+            regStageService.updateStageByTelegramId(fromId, RegStageEntity.Stage.ERROR);
+        }
     }
 
     public void handle(Update update, Exception e) {
@@ -38,12 +41,7 @@ public class BotExceptionHandler {
         String fromId = botUtils.getFromId(update);
         if (fromId != null) {
             messageService.sendInternalErrorMessage(fromId);
-            Optional<GrandchildEntity> opGrandchild = grandchildRepository.findByTelegramId(fromId);
-            if (opGrandchild.isPresent()) {
-                RegStageEntity regStage = regStageRepository.findByGrandchild(opGrandchild.get())
-                    .orElse(new RegStageEntity(RegStageEntity.Stage.ERROR, opGrandchild.get()));
-                regStageRepository.save(regStage);
-            }
+            regStageService.updateStageByTelegramId(fromId, RegStageEntity.Stage.ERROR);
         }
     }
 }
