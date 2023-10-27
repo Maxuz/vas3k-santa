@@ -3,9 +3,9 @@ package dev.maxuz.vas3ksanta.bot.handler;
 import dev.maxuz.vas3ksanta.bot.BotMessageService;
 import dev.maxuz.vas3ksanta.bot.BotProps;
 import dev.maxuz.vas3ksanta.bot.BotUtils;
-import dev.maxuz.vas3ksanta.db.GrandchildRepository;
+import dev.maxuz.vas3ksanta.db.UserRepository;
 import dev.maxuz.vas3ksanta.db.RegStageRepository;
-import dev.maxuz.vas3ksanta.model.GrandchildEntity;
+import dev.maxuz.vas3ksanta.model.UserEntity;
 import dev.maxuz.vas3ksanta.model.RegStageEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +25,13 @@ import static org.mockito.Mockito.*;
 class StartCommandHandlerTest {
     private static final String telegramId = "1234";
 
-    private final GrandchildRepository grandchildRepository = mock(GrandchildRepository.class);
+    private final UserRepository userRepository = mock(UserRepository.class);
     private final RegStageRepository regStageRepository = mock(RegStageRepository.class);
     private final BotProps properties = mock(BotProps.class);
     private final BotMessageService messageService = mock(BotMessageService.class);
     private final BotUtils botUtils = mock(BotUtils.class);
 
-    private final StartCommandHandler handler = new StartCommandHandler(grandchildRepository, regStageRepository, properties, messageService, botUtils);
+    private final StartCommandHandler handler = new StartCommandHandler(userRepository, regStageRepository, properties, messageService, botUtils);
 
     @BeforeEach
     void setUp() {
@@ -100,10 +100,10 @@ class StartCommandHandlerTest {
         return update;
     }
 
-    private static RegStageEntity getRegStage(RegStageEntity.Stage stage, GrandchildEntity grandchild) {
+    private static RegStageEntity getRegStage(RegStageEntity.Stage stage, UserEntity user) {
         RegStageEntity regStage = mock(RegStageEntity.class);
         when(regStage.getStage()).thenReturn(stage);
-        when(regStage.getGrandchild()).thenReturn(grandchild);
+        when(regStage.getUser()).thenReturn(user);
         return regStage;
     }
 
@@ -115,88 +115,88 @@ class StartCommandHandlerTest {
      */
 
     @Test
-    void handle_GrandchildIsNewStageIsNull_MessageWithLink() {
-        when(grandchildRepository.findByTelegramId(telegramId)).thenReturn(Optional.empty());
-        when(regStageRepository.findByGrandchild(any())).thenReturn(Optional.empty());
+    void handle_UserIsNewStageIsNull_MessageWithLink() {
+        when(userRepository.findByTelegramId(telegramId)).thenReturn(Optional.empty());
+        when(regStageRepository.findByUser(any())).thenReturn(Optional.empty());
 
         Update update = getUpdate();
         handler.handle(update);
 
         verify(messageService).sendMarkdown(telegramId, "Пройдите авторизацию в Вастрик\\.Клуб по [ссылке](https://test?tid=1234)");
-        ArgumentCaptor<GrandchildEntity> grandchildArgCaptor = ArgumentCaptor.forClass(GrandchildEntity.class);
-        verify(grandchildRepository).save(grandchildArgCaptor.capture());
+        ArgumentCaptor<UserEntity> userArgCaptor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository).save(userArgCaptor.capture());
 
-        GrandchildEntity actualGrandchild = grandchildArgCaptor.getValue();
-        assertNotNull(actualGrandchild);
-        assertEquals(telegramId, actualGrandchild.getTelegramId());
+        UserEntity actualUser = userArgCaptor.getValue();
+        assertNotNull(actualUser);
+        assertEquals(telegramId, actualUser.getTelegramId());
 
         ArgumentCaptor<RegStageEntity> regStageArgCaptor = ArgumentCaptor.forClass(RegStageEntity.class);
         verify(regStageRepository).save(regStageArgCaptor.capture());
         RegStageEntity regStage = regStageArgCaptor.getValue();
         assertNotNull(regStage);
-        assertEquals(actualGrandchild, regStage.getGrandchild());
+        assertEquals(actualUser, regStage.getUser());
         assertEquals(RegStageEntity.Stage.STARTED, regStage.getStage());
     }
 
     @Test
     void handle_UserExistsStageIsNull_MessageWithLink() {
-        GrandchildEntity grandchild = mock(GrandchildEntity.class);
-        when(grandchildRepository.findByTelegramId(telegramId)).thenReturn(Optional.of(grandchild));
-        when(regStageRepository.findByGrandchild(any())).thenReturn(Optional.empty());
+        UserEntity user = mock(UserEntity.class);
+        when(userRepository.findByTelegramId(telegramId)).thenReturn(Optional.of(user));
+        when(regStageRepository.findByUser(any())).thenReturn(Optional.empty());
 
         Update update = getUpdate();
         handler.handle(update);
 
         verify(messageService).sendMarkdown(telegramId, "Пройдите авторизацию в Вастрик\\.Клуб по [ссылке](https://test?tid=1234)");
-        ArgumentCaptor<GrandchildEntity> grandchildArgCaptor = ArgumentCaptor.forClass(GrandchildEntity.class);
-        verify(grandchildRepository).save(grandchildArgCaptor.capture());
+        ArgumentCaptor<UserEntity> userArgCaptor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository).save(userArgCaptor.capture());
 
-        GrandchildEntity actualGrandchild = grandchildArgCaptor.getValue();
-        assertNotNull(actualGrandchild);
-        assertEquals(grandchild, actualGrandchild);
+        UserEntity actualUser = userArgCaptor.getValue();
+        assertNotNull(actualUser);
+        assertEquals(user, actualUser);
 
         ArgumentCaptor<RegStageEntity> regStageArgCaptor = ArgumentCaptor.forClass(RegStageEntity.class);
         verify(regStageRepository).save(regStageArgCaptor.capture());
         RegStageEntity regStage = regStageArgCaptor.getValue();
         assertNotNull(regStage);
-        assertEquals(actualGrandchild, regStage.getGrandchild());
+        assertEquals(actualUser, regStage.getUser());
         assertEquals(RegStageEntity.Stage.STARTED, regStage.getStage());
     }
 
     @Test
     void handle_UserExistsStageIsStarted_MessageWithLink() {
-        GrandchildEntity grandchild = mock(GrandchildEntity.class);
-        when(grandchildRepository.findByTelegramId(telegramId)).thenReturn(Optional.of(grandchild));
-        RegStageEntity regStage = getRegStage(RegStageEntity.Stage.STARTED, grandchild);
-        when(regStageRepository.findByGrandchild(any())).thenReturn(Optional.of(regStage));
+        UserEntity user = mock(UserEntity.class);
+        when(userRepository.findByTelegramId(telegramId)).thenReturn(Optional.of(user));
+        RegStageEntity regStage = getRegStage(RegStageEntity.Stage.STARTED, user);
+        when(regStageRepository.findByUser(any())).thenReturn(Optional.of(regStage));
 
         Update update = getUpdate();
         handler.handle(update);
 
         verify(messageService).sendMarkdown(telegramId, "Пройдите авторизацию в Вастрик\\.Клуб по [ссылке](https://test?tid=1234)");
 
-        ArgumentCaptor<GrandchildEntity> grandchildArgCaptor = ArgumentCaptor.forClass(GrandchildEntity.class);
-        verify(grandchildRepository).save(grandchildArgCaptor.capture());
+        ArgumentCaptor<UserEntity> userArgCaptor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository).save(userArgCaptor.capture());
 
-        GrandchildEntity actualGrandchild = grandchildArgCaptor.getValue();
-        assertNotNull(actualGrandchild);
-        assertEquals(grandchild, actualGrandchild);
+        UserEntity actualUser = userArgCaptor.getValue();
+        assertNotNull(actualUser);
+        assertEquals(user, actualUser);
 
         ArgumentCaptor<RegStageEntity> regStageArgCaptor = ArgumentCaptor.forClass(RegStageEntity.class);
         verify(regStageRepository).save(regStageArgCaptor.capture());
         RegStageEntity actualStage = regStageArgCaptor.getValue();
         assertNotNull(actualStage);
-        assertEquals(actualGrandchild, actualStage.getGrandchild());
+        assertEquals(actualUser, actualStage.getUser());
         assertEquals(RegStageEntity.Stage.STARTED, actualStage.getStage());
     }
 
     @Test
     void handle_UserExistsStageIsFinal_MessageWithLink() {
-        GrandchildEntity grandchild = mock(GrandchildEntity.class);
-        when(grandchildRepository.findByTelegramId(telegramId)).thenReturn(Optional.of(grandchild));
+        UserEntity user = mock(UserEntity.class);
+        when(userRepository.findByTelegramId(telegramId)).thenReturn(Optional.of(user));
 
-        RegStageEntity regStage = getRegStage(RegStageEntity.Stage.FINAL, grandchild);
-        when(regStageRepository.findByGrandchild(any())).thenReturn(Optional.of(regStage));
+        RegStageEntity regStage = getRegStage(RegStageEntity.Stage.FINAL, user);
+        when(regStageRepository.findByUser(any())).thenReturn(Optional.of(regStage));
 
         Update update = getUpdate();
         handler.handle(update);
@@ -204,12 +204,12 @@ class StartCommandHandlerTest {
         verify(messageService).sendMarkdown(telegramId, "Пройдите авторизацию в Вастрик\\.Клуб по [ссылке](https://test?tid=1234)");
         verify(messageService).sendPlainText(telegramId, "⚠️ Warning ⚠️ Мы нашли существующую регистрацию. Продолжение операции удалит текущую запись. Навеки вечные.");
 
-        ArgumentCaptor<GrandchildEntity> grandchildArgCaptor = ArgumentCaptor.forClass(GrandchildEntity.class);
-        verify(grandchildRepository).save(grandchildArgCaptor.capture());
+        ArgumentCaptor<UserEntity> userArgCaptor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository).save(userArgCaptor.capture());
 
-        GrandchildEntity actualGrandchild = grandchildArgCaptor.getValue();
-        assertNotNull(actualGrandchild);
-        assertEquals(grandchild, actualGrandchild);
+        UserEntity actualUser = userArgCaptor.getValue();
+        assertNotNull(actualUser);
+        assertEquals(user, actualUser);
         verify(regStageRepository, never()).save(any());
     }
 }

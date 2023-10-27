@@ -2,7 +2,7 @@ package dev.maxuz.vas3ksanta.service;
 
 import dev.maxuz.vas3ksanta.model.CountryEntity;
 import dev.maxuz.vas3ksanta.model.FindSantaResult;
-import dev.maxuz.vas3ksanta.model.GrandchildEntity;
+import dev.maxuz.vas3ksanta.model.UserEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,17 +10,17 @@ import java.util.Map;
 
 public class FindSantaService {
 
-    public FindSantaResult findSanta(List<GrandchildEntity> grandchildren) {
+    public FindSantaResult findSanta(List<UserEntity> users) {
         var shuffleResult = new FindSantaResult();
 
-        Map<GrandchildEntity, GrandchildEntity> matched = new HashMap<>();
+        Map<UserEntity, UserEntity> matched = new HashMap<>();
 
-        for (GrandchildEntity grandchild : grandchildren) {
-            GrandchildEntity sender = findSender(grandchild, grandchildren, matched);
+        for (UserEntity user : users) {
+            UserEntity sender = findSender(user, users, matched);
             if (sender == null) {
-                shuffleResult.addUnmatched(grandchild, "Не смог найти Санту для ребенка");
+                shuffleResult.addUnmatched(user, "Не смог найти Санту для ребенка");
             } else {
-                matched.put(sender, grandchild);
+                matched.put(sender, user);
             }
         }
 
@@ -28,9 +28,9 @@ public class FindSantaService {
         return shuffleResult;
     }
 
-    private GrandchildEntity findSender(GrandchildEntity recipient, List<GrandchildEntity> grandchildren, Map<GrandchildEntity, GrandchildEntity> matched) {
-        GrandchildEntity result = null;
-        for (GrandchildEntity sender : grandchildren) {
+    private UserEntity findSender(UserEntity recipient, List<UserEntity> userren, Map<UserEntity, UserEntity> matched) {
+        UserEntity result = null;
+        for (UserEntity sender : userren) {
             if (!sender.equals(recipient) && !matched.containsKey(sender) && contains(sender.getRecipientCountries(), recipient.getCountry())) {
                 result = sender;
                 if (!matched.containsKey(recipient) || !matched.get(recipient).equals(sender)) {

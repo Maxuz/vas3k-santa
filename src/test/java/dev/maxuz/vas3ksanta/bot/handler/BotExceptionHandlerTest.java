@@ -35,7 +35,7 @@ class BotExceptionHandlerTest {
     }
 
     @Test
-    void handle_GrandchildExists_UpdateRegStageAndSendMessage() {
+    void handle_UserExists_UpdateRegStageAndSendMessage() {
         var update = mock(Update.class);
         var exception = mock(Exception.class);
 
@@ -53,7 +53,7 @@ class BotExceptionHandlerTest {
     }
 
     @Test
-    void handleUserException_GrandchildExists_UpdateRegStageAndSendMessage() {
+    void handleUserException_UserExists_UpdateRegStageAndSendMessage() {
         var update = mock(Update.class);
         var exception = new UserException("error text");
 

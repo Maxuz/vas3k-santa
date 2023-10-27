@@ -1,8 +1,8 @@
 package dev.maxuz.vas3ksanta.service;
 
-import dev.maxuz.vas3ksanta.db.GrandchildRepository;
+import dev.maxuz.vas3ksanta.db.UserRepository;
 import dev.maxuz.vas3ksanta.db.RegStageRepository;
-import dev.maxuz.vas3ksanta.model.GrandchildEntity;
+import dev.maxuz.vas3ksanta.model.UserEntity;
 import dev.maxuz.vas3ksanta.model.RegStageEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,28 +17,28 @@ import java.util.stream.Collectors;
 public class RegStageService {
     private static final Logger log = LoggerFactory.getLogger(RegStageService.class);
 
-    private final GrandchildRepository grandchildRepository;
+    private final UserRepository userRepository;
     private final RegStageRepository regStageRepository;
 
     private final Set<RegStageEntity.Stage> updatableStages = Arrays.stream(RegStageEntity.Stage.values()).filter( s -> !s.equals(RegStageEntity.Stage.DECLINED)).collect(Collectors.toSet());
 
-    public RegStageService(GrandchildRepository grandchildRepository, RegStageRepository regStageRepository) {
-        this.grandchildRepository = grandchildRepository;
+    public RegStageService(UserRepository userRepository, RegStageRepository regStageRepository) {
+        this.userRepository = userRepository;
         this.regStageRepository = regStageRepository;
     }
 
     public void updateStageByTelegramId(String telegramId, RegStageEntity.Stage stage) {
-        Optional<GrandchildEntity> opGrandchild = grandchildRepository.findByTelegramId(telegramId);
-        if (opGrandchild.isPresent()) {
-            RegStageEntity regStage = regStageRepository.findByGrandchild(opGrandchild.get())
-                .orElse(new RegStageEntity(stage, opGrandchild.get()));
+        Optional<UserEntity> opUser = userRepository.findByTelegramId(telegramId);
+        if (opUser.isPresent()) {
+            RegStageEntity regStage = regStageRepository.findByUser(opUser.get())
+                .orElse(new RegStageEntity(stage, opUser.get()));
             if (canUpdate(regStage.getStage())) {
                 regStageRepository.save(regStage);
             } else {
                 log.warn("The stage {} can't be updated", stage);
             }
         } else {
-            log.warn("Grandchild with telegramId {} is not found", telegramId);
+            log.warn("User with telegramId {} is not found", telegramId);
         }
     }
 

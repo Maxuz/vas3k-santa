@@ -14,7 +14,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="grandchild">
+        <createTable tableName="user">
             <column name="id" type="serial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -26,21 +26,21 @@
             <column name="admin" type="boolean"/>
             <column name="country_id" type="integer">
                 <constraints nullable="true"
-                             foreignKeyName="fk_grandchild_country"
+                             foreignKeyName="fk_user_country"
                              references="country(id)"/>
             </column>
             <column name="delivery_address" type="varchar(300)"/>
         </createTable>
 
-        <createTable tableName="grandchild_recipient_country">
-            <column name="grandchild_id" type="integer">
+        <createTable tableName="user_recipient_country">
+            <column name="user_id" type="integer">
                 <constraints nullable="false"
-                             foreignKeyName="fk_grandchild_recipient_country_grandchild"
-                             references="grandchild(id)"/>
+                             foreignKeyName="fk_user_recipient_country_user"
+                             references="user(id)"/>
             </column>
             <column name="country_id" type="integer">
                 <constraints nullable="false"
-                             foreignKeyName="fk_grandchild_recipient_country_country"
+                             foreignKeyName="fk_user_recipient_country_country"
                              references="country(id)"/>
             </column>
         </createTable>
@@ -50,10 +50,10 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="stage" type="varchar(10)"/>
-            <column name="grandchild_id" type="integer">
+            <column name="user_id" type="integer">
                 <constraints nullable="false"
-                             foreignKeyName="fk_grandchild_stage"
-                             references="grandchild(id)"/>
+                             foreignKeyName="fk_user_stage"
+                             references="user(id)"/>
             </column>
         </createTable>
 

@@ -4,22 +4,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FindSantaResult {
-    private final Map<GrandchildEntity, GrandchildEntity> matchedMap = new HashMap<>();
-    private final Map<GrandchildEntity, String> unmatchedMap = new HashMap<>();
+    private final Map<UserEntity, UserEntity> matchedMap = new HashMap<>();
+    private final Map<UserEntity, String> unmatchedMap = new HashMap<>();
 
-    public void addMatched(GrandchildEntity from, GrandchildEntity to) {
+    public void addMatched(UserEntity from, UserEntity to) {
         matchedMap.put(from, to);
     }
 
-    public void addUnmatched(GrandchildEntity grandchild, String reason) {
-        unmatchedMap.put(grandchild, reason);
+    public void addUnmatched(UserEntity user, String reason) {
+        unmatchedMap.put(user, reason);
     }
 
-    public Map<GrandchildEntity, GrandchildEntity> getMatchedMap() {
+    public Map<UserEntity, UserEntity> getMatchedMap() {
         return matchedMap;
     }
 
-    public Map<GrandchildEntity, String> getUnmatchedMap() {
+    public Map<UserEntity, String> getUnmatchedMap() {
         return unmatchedMap;
     }
 }

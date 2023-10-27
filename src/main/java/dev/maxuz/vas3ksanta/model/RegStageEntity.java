@@ -35,15 +35,15 @@ public class RegStageEntity {
     private String stage;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "grandchild_id")
-    private GrandchildEntity grandchild;
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     public RegStageEntity() {
     }
 
-    public RegStageEntity(Stage stage, GrandchildEntity grandchild) {
+    public RegStageEntity(Stage stage, UserEntity user) {
         this.stage = stage.toString();
-        this.grandchild = grandchild;
+        this.user = user;
     }
 
     public Long getId() {
@@ -62,11 +62,11 @@ public class RegStageEntity {
         this.stage = stage.toString();
     }
 
-    public GrandchildEntity getGrandchild() {
-        return grandchild;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setGrandchild(GrandchildEntity grandchild) {
-        this.grandchild = grandchild;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 }

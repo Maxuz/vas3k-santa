@@ -5,10 +5,11 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity(name = "grandchild")
-public final class GrandchildEntity {
+@SuppressWarnings("unused")
+@Entity(name = "user")
+public final class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "grandchild_id_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_id_seq")
     private Long id;
 
     @Column(name = "tid", unique = true)
@@ -31,16 +32,16 @@ public final class GrandchildEntity {
     private String deliveryAddress;
 
     @ManyToMany
-    @JoinTable(name = "grandchild_recipient_country",
-        joinColumns = @JoinColumn(name = "grandchild_id"),
+    @JoinTable(name = "user_recipient_country",
+        joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "country_id")
     )
     private List<CountryEntity> recipientCountries;
 
-    public GrandchildEntity() {
+    public UserEntity() {
     }
 
-    public GrandchildEntity(String telegramId) {
+    public UserEntity(String telegramId) {
         this.telegramId = telegramId;
     }
 
